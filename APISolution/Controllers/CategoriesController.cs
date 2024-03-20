@@ -1,7 +1,6 @@
-﻿using APISolution.Models;
+﻿using APISolution.BLL.DTOs;
+using APISolution.BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using MyWebFormApp.BLL.DTOs;
-using MyWebFormApp.BLL.Interfaces;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -19,40 +18,63 @@ namespace APISolution.Controllers
 
 		// GET: api/Categories
 		[HttpGet]
-		public IActionResult GetAll()
+		public async Task<IEnumerable<CategoryDTO>> GetAll()
 		{
-			return Ok(_categoryBLL.GetAll());
+			var results = await _categoryBLL.GetAll();
+			return results;
 		}
 
-		// GET api/Categories/5
+		//GET api/Categories/5
 		[HttpGet("{id}")]
-		public CategoryDTO GetById(int id)
+		public async Task<CategoryDTO> GetById(int id)
 		{
-			return _categoryBLL.GetById(id);
+			return await _categoryBLL.GetById(id);
+		}
+
+		[HttpGet("Name/{name}")]
+		public async Task<IEnumerable<CategoryDTO>> GetByName(string name)
+		{
+			return await _categoryBLL.GetByName(name);
+		}
+
+		[HttpGet("Count/{name}")]
+		public async Task<int> GetCountCategories(string name)
+		{
+			return await _categoryBLL.GetCountCategories(name);
+		}
+
+		[HttpGet("Paging/{pageNumber}/{pageSize}/{name}")]
+		public async Task<IEnumerable<CategoryDTO>> GetWithPaging(int pageNumber, int pageSize, string name)
+		{
+			return await _categoryBLL.GetWithPaging(pageNumber, pageSize, name);
 		}
 
 		// POST api/<Categories_Controller>
 		[HttpPost]
-		public IActionResult Post(CategoryCreateDTO category)
+		public async Task<CategoryDTO> Post(CategoryCreateDTO category)
 		{
-			_categoryBLL.Insert(category);
-			return Ok();
+			return await _categoryBLL.Insert(category);
 		}
 
-		// PUT api/<Categories_Controller>/5
-		[HttpPut("{id}")]
-		public IActionResult Put(int id, [FromBody] CategoryUpdateDTO category)
+		[HttpPut]
+		public async Task<CategoryDTO> Put(CategoryUpdateDTO category)
 		{
-			_categoryBLL.Update(category);
-			return Ok();
+			return await _categoryBLL.Update(category);
 		}
 
 		// DELETE api/<Categories_Controller>/5
 		[HttpDelete("{id}")]
-		public IActionResult Delete(int id)
+		public async Task<bool> Delete(int id)
 		{
-			_categoryBLL.Delete(id);
-			return Ok($"Data Category {id} berhasil didelete");
+			var result = await _categoryBLL.Delete(id);
+			if(result)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 	}
 }

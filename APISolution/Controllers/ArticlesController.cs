@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using MyWebFormApp.BLL.DTOs;
-using MyWebFormApp.BLL.Interfaces;
+﻿using APISolution.BLL.DTOs;
+using APISolution.BLL.Interfaces;
+using APISolution.Domain;
+using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -12,48 +14,81 @@ namespace APISolution.Controllers
 	{
 
 		private IArticleBLL _articleBLL;
-		public ArticlesController(IArticleBLL articleBLL)
+		private IMapper _mapper;
+		public ArticlesController(IArticleBLL articleBLL, IMapper mapper)
 		{
 			_articleBLL = articleBLL;
+			_mapper = mapper;
 		}
 
 		// GET: api/<ArticlesController>
 		[HttpGet]
-		public IActionResult GetAll()
+		public async Task<IEnumerable<ArticleDTO>> GetAll()
 		{
-			var articles = _articleBLL.GetArticleWithCategory();
-			return Ok(articles);
+			var articles = await _articleBLL.GetArticleWithCategory();
+			return articles;
 		}
 
-		// GET api/<ArticlesController>/5
+		//GET api/<ArticlesController>/5
 		[HttpGet("{id}")]
-		public ArticleDTO GetArticleById(int id)
+		public async Task<ArticleDTO> GetArticleById(int id)
 		{
-			return _articleBLL.GetArticleById(id);
+			return await _articleBLL.GetArticleById(id);
 		}
 
-		// POST api/<ArticlesController>
+		//POST api/<ArticlesController>
 		[HttpPost]
-		public IActionResult Post(ArticleCreateDTO article)
+		public async Task<IActionResult> Post(ArticleCreateDTO article)
 		{
-			_articleBLL.Insert(article);
-			return Ok();
+
+			if (article == null)
+			{
+				return BadRequest();
+			}
+
+			var result = await _articleBLL.Insert(article);
+
+			if (result != null)
+			{
+				return Ok(result);
+			}
+			else
+			{
+				return StatusCode(500, "Gagal menyimpan artikel baru.");
+			}
 		}
 
 		// PUT api/<ArticlesController>/5
 		[HttpPut("{id}")]
-		public IActionResult Put(int id, [FromBody] ArticleUpdateDTO article)
+		public async Task<ActionResult<ArticleDTO>> Put(int id, [FromBody] ArticleUpdateDTO article)
 		{
-			_articleBLL.Update(article);
-			return Ok();
+			var getArticle = await _articleBLL.GetArticleById(id);
+			if (getArticle == null)
+			{
+				return NotFound($"Data Article dengan id {id} tidak ditemukan");
+			}
+			var result = await _articleBLL.Update(id, article);
+
+			if (result != null)
+			{
+				return Ok(result);
+			}
+			else
+			{
+				return StatusCode(500, "Gagal mengupdate artikel.");
+			}
 		}
 
 		// DELETE api/<ArticlesController>/5
 		[HttpDelete("{id}")]
-		public IActionResult Delete(int id)
+		public async Task<ActionResult<bool>> Delete(int id)
 		{
-			_articleBLL.Delete(id);
-			return Ok($"Data Article {id} berhasil didelete");
+			var result = await _articleBLL.Delete(id);
+			if (!result)
+			{
+				return NotFound(); // Entitas tidak ditemukan, kembalikan respons 404 Not Found
+			}
+			return Ok(result);
 		}
 	}
 }

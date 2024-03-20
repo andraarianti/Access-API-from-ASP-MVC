@@ -1,18 +1,42 @@
-using MyWebFormApp.BLL;
-using MyWebFormApp.BLL.Interfaces;
+using FluentValidation;
+using Microsoft.EntityFrameworkCore;
+using APISolution.Data;
+using APISolution.BLL.Interfaces;
+using APISolution.BLL.DTOs;
+using APISolution.BLL;
+using APISolution.BLL.DTOs.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+//builder.Services.AddControllers();
+
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+	options.JsonSerializerOptions.PropertyNamingPolicy = null;
+});
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//register DI
+//appdbcontext
+builder.Services.AddDbContext<AppDbContext>(options =>
+{
+	options.UseSqlServer(builder.Configuration.GetConnectionString("MyDbConnectionString"));
+});
+
+//DI
+builder.Services.AddScoped<ICategoryData, CategoryData>();
 builder.Services.AddScoped<ICategoryBLL, CategoryBLL>();
+builder.Services.AddScoped<IArticleData, ArticleData>();
 builder.Services.AddScoped<IArticleBLL, ArticleBLL>();
+
+//automapper
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddValidatorsFromAssemblyContaining<CategoryCreateDTOValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CategoryUpdateDTOValidator>();
 
 var app = builder.Build();
 
