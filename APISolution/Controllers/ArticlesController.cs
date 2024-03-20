@@ -36,6 +36,24 @@ namespace APISolution.Controllers
 			return await _articleBLL.GetArticleById(id);
 		}
 
+		[HttpGet("category/{categoryId}")]
+		public async Task<IEnumerable<ArticleDTO>> GetArticleByCategory(int categoryId)
+		{
+			return await _articleBLL.GetArticleByCategory(categoryId);
+		}
+
+		[HttpGet("paging/{categoryId}/{pageNumber}/{pageSize}")]
+		public async Task<IEnumerable<ArticleDTO>> GetWithPaging(int categoryId, int pageNumber, int pageSize)
+		{
+			return await _articleBLL.GetWithPaging(categoryId, pageNumber, pageSize);
+		}
+
+		[HttpGet("count")]
+		public async Task<int> GetCountArticles()
+		{
+			return await _articleBLL.GetCountArticles();
+		}
+
 		//POST api/<ArticlesController>
 		[HttpPost]
 		public async Task<IActionResult> Post(ArticleCreateDTO article)
