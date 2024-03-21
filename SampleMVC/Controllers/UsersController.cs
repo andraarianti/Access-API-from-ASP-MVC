@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using MyWebFormApp.BLL.DTOs;
-using MyWebFormApp.BLL.Interfaces;
 using System.Text.Json;
+using SampleMVC.ViewModels;
+using MyWebFormApp.BLL.Interfaces;
+using MyWebFormApp.BLL.DTOs;
 
 namespace SampleMVC.Controllers
 {
@@ -47,7 +47,7 @@ namespace SampleMVC.Controllers
 				var userDtoSerialize = JsonSerializer.Serialize(userDto);
 				HttpContext.Session.SetString("user", userDtoSerialize);
 
-				TempData["Message"] = "Welcome " + userDto.Username;
+				//TempData["Message"] = "Welcome " + userDto.Username;
 				return RedirectToAction("Index", "Home");
 			}
 			catch (Exception ex)

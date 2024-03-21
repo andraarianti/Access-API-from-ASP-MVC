@@ -7,10 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Models\**" />
-    <Content Remove="Models\**" />
-    <EmbeddedResource Remove="Models\**" />
-    <None Remove="Models\**" />
+    <Compile Remove="Models\AppDbContext.cs" />
+    <Compile Remove="Models\Article.cs" />
+    <Compile Remove="Models\Category.cs" />
+    <Compile Remove="Models\City.cs" />
+    <Compile Remove="Models\Country.cs" />
+    <Compile Remove="Models\Role.cs" />
+    <Compile Remove="Models\User.cs" />
+    <Compile Remove="Models\ViewArticlesWithCategory.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,6 +37,10 @@
     <ProjectReference Include="..\APISolution.BLL\APISolution.BLL.csproj" />
     <ProjectReference Include="..\APISolution.Data\APISolution.Data.csproj" />
     <ProjectReference Include="..\APISolution.Domain\APISolution.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 
 </Project>

@@ -83,9 +83,20 @@ namespace APISolution.Data
 			return article;
 		}
 
-		public Task<Task> InsertArticleWithCategory(Article article)
+		public async Task<Task> InsertArticleWithCategory(Article article)
 		{
-			throw new NotImplementedException();
+			try
+			{
+				_context.Categories.Add(article.Category);
+				_context.Articles.Add(article);
+				await _context.SaveChangesAsync();
+				return Task.CompletedTask;
+			}
+			catch (Exception ex)
+			{
+
+				throw new Exception(ex.Message);
+			}
 		}
 
 		public Task<int> InsertWithIdentity(Article article)
@@ -101,6 +112,7 @@ namespace APISolution.Data
 				article.CategoryId = entity.CategoryId;
 				article.Title = entity.Title;
 				article.Details = entity.Details;
+				article.PublishDate = entity.PublishDate;
 				article.IsApproved = entity.IsApproved;
 				article.Pic = entity.Pic;
 

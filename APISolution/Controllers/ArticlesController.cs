@@ -1,6 +1,7 @@
 ﻿using APISolution.BLL.DTOs;
 using APISolution.BLL.Interfaces;
 using APISolution.Domain;
+using APISolution.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
@@ -107,6 +108,34 @@ namespace APISolution.Controllers
 				return NotFound(); // Entitas tidak ditemukan, kembalikan respons 404 Not Found
 			}
 			return Ok(result);
+		}
+
+		[HttpPost("upload")]
+		public async Task<IActionResult> Post([FromForm] ArticleWithFile articleWithFile)
+		{
+			if (articleWithFile.file == null || articleWithFile.file.Length == 0)
+			{
+				return BadRequest("File is required");
+			}
+			var newName = $"{Guid.NewGuid()}_{articleWithFile.file.FileName}";
+			var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", newName);
+			using (var stream = new FileStream(path, FileMode.Create))
+			{
+				await articleWithFile.file.CopyToAsync(stream);
+			}
+
+			var articleCreateDTO = new ArticleCreateDTO
+			{
+				CategoryID = articleWithFile.CategoryId,
+				Title = articleWithFile.Title,
+				Details = articleWithFile.Details,
+				IsApproved = articleWithFile.IsApproved,
+				Pic = newName
+			};
+
+			var article = await _articleBLL.Insert(articleCreateDTO);
+
+			return CreatedAtAction(nameof(GetAll), new { id = article.ArticleID }, article);
 		}
 	}
 }
