@@ -48,7 +48,7 @@ namespace APISolution.Data
 			return categories;
 		}
 
-		public async Task<IEnumerable<Category>> GetWithPaging(int pageNumber, int pageSize, string name)
+		public async Task<IEnumerable<Category>> GetWithPaging(int pageNumber, int pageSize, string name = "")
 		{
 			var categories = await _context.Categories.Where(c => c.CategoryName.Contains(name))
 				.Skip((pageNumber - 1) * pageSize)

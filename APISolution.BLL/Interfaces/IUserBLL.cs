@@ -1,6 +1,6 @@
 ﻿using APISolution.BLL.DTOs;
 
-namespace MyWebFormApp.BLL.Interfaces
+namespace APISolution.BLL.Interfaces
 {
     public interface IUserBLL
     {

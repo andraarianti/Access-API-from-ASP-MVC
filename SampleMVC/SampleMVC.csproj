@@ -14,7 +14,6 @@
   <ItemGroup>
     <ProjectReference Include="..\APISolution.BLL\APISolution.BLL.csproj" />
     <ProjectReference Include="..\APISolution.Domain\APISolution.Domain.csproj" />
-    <ProjectReference Include="..\MyWebFormApp.BLL\MyWebFormApp.BLL.csproj" />
   </ItemGroup>
 
   <ItemGroup>

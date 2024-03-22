@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace APISolution.BLL.DTOs
 {
@@ -10,5 +11,7 @@ namespace APISolution.BLL.DTOs
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+
+        public string? Token { get; set; }
     }
 }

@@ -5,6 +5,9 @@ namespace APISolution.Data;
 
 public interface IUserData : ICrud<User>
 {
+    Task<IEnumerable<User>> GetAll();
+    Task<User> Insert(User entity);
+    Task<User> Update(User entity);
     Task<IEnumerable<User>> GetAllWithRoles();
     Task<User> GetUserWithRoles(string username);
     Task<User> GetByUsername(string username);

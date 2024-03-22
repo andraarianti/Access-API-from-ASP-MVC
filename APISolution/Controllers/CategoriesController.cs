@@ -1,11 +1,13 @@
 ﻿using APISolution.BLL.DTOs;
 using APISolution.BLL.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace APISolution.Controllers
 {
+	[Authorize]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class CategoriesController : ControllerBase
@@ -37,8 +39,8 @@ namespace APISolution.Controllers
 			return await _categoryBLL.GetByName(name);
 		}
 
-		[HttpGet("Count/{name}")]
-		public async Task<int> GetCountCategories(string name)
+		[HttpGet("Count/")]
+		public async Task<int> GetCountCategories([FromQuery] string name = "")
 		{
 			return await _categoryBLL.GetCountCategories(name);
 		}

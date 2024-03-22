@@ -60,7 +60,7 @@ namespace APISolution.BLL
 			return categories;
 		}
 
-		public async Task<IEnumerable<CategoryDTO>> GetWithPaging(int pageNumber, int pageSize, string name)
+		public async Task<IEnumerable<CategoryDTO>> GetWithPaging(int pageNumber, int pageSize, string name = "")
 		{
 			var categories = await _categoryData.GetWithPaging(pageNumber, pageSize, name);
 			var categoriesDTO = _mapper.Map<IEnumerable<CategoryDTO>>(categories);
